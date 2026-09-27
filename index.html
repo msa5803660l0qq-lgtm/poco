@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>404 Not Found</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      background: #ffffff;
+      color: #111111;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      min-height: 100vh;
+    }
+
+    .error-page {
+      width: 100%;
+      text-align: center;
+      transform: translateY(2%);
+    }
+
+    /*
+      404
+    */
+    .error-code {
+      margin: 0;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      font-size: clamp(82px, 24vw, 116px);
+      line-height: 0.9;
+
+      font-weight: 600;
+      letter-spacing: -6px;
+
+      color: #000000;
+    }
+
+    /*
+      Not Found
+    */
+    .error-title {
+      margin: 34px 0 0;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+
+      font-size: clamp(32px, 9vw, 46px);
+      line-height: 1;
+
+      font-weight: 500;
+      letter-spacing: -1.5px;
+
+      color: #111111;
+    }
+
+    /*
+      The page...
+    */
+    .error-message {
+      margin: 38px auto 0;
+
+      font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+      font-size: 15px;
+      line-height: 1.65;
+
+      letter-spacing: 0.2px;
+
+      color: #444444;
+    }
+
+    /*
+      隠しリンク
+    */
+    .hidden-link {
+      color: inherit;
+      text-decoration: none;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .hidden-link:visited,
+    .hidden-link:hover,
+    .hidden-link:active,
+    .hidden-link:focus {
+      color: inherit;
+      text-decoration: none;
+      outline: none;
+    }
+
+    /*
+      文字そのものだけをクリック判定
+    */
+    #hit-area {
+      position: fixed;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      z-index: 9999;
+
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    #hit-area text {
+      pointer-events: visiblePainted;
+      fill: transparent;
+      cursor: pointer;
+    }
+
+    @media (max-width: 390px) {
+
+      .error-code {
+        font-size: 86px;
+        letter-spacing: -5px;
+      }
+
+      .error-title {
+        margin-top: 27px;
+        font-size: 34px;
+      }
+
+      .error-message {
+        margin-top: 32px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="error-page">
+
+    <!-- ① 404 -->
+    <a
+      href="https://www.pococha.com/ja-jp"
+      class="hidden-link"
+    >
+      <div class="error-code">404</div>
+    </a>
+
+
+    <!-- ② Not Found -->
+    <a
+      href="https://haishin-lab.com/pococha-rankmeter/"
+      class="hidden-link"
+    >
+      <div class="error-title">Not Found</div>
+    </a>
+
+
+    <!-- ③ 説明文 -->
+    <a
+      href="https://one-carat.com/campus/archives/87905#S1〜S6ランク"
+      class="hidden-link"
+    >
+      <div class="error-message">
+        The page you requested<br>
+        could not be found.
+      </div>
+    </a>
+
+  </main>
+
+
+  <svg id="hit-area"></svg>
+
+
+  <script>
+    function createTextHitArea(element, url) {
+
+      const svg = document.getElementById("hit-area");
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+
+      const lines = element.innerText.split("\n");
+
+      const svgText = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "text"
+      );
+
+      svgText.setAttribute(
+        "font-family",
+        style.fontFamily
+      );
+
+      svgText.setAttribute(
+        "font-size",
+        style.fontSize
+      );
+
+      svgText.setAttribute(
+        "font-weight",
+        style.fontWeight
+      );
+
+      svgText.setAttribute(
+        "letter-spacing",
+        style.letterSpacing
+      );
+
+      svgText.setAttribute(
+        "fill",
+        "transparent"
+      );
+
+      svgText.addEventListener("click", function () {
+        window.location.href = url;
+      });
+
+      const lineHeight = parseFloat(style.lineHeight);
+
+      lines.forEach(function(line, index) {
+
+        const tspan = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "tspan"
+        );
+
+        tspan.textContent = line;
+
+        tspan.setAttribute(
+          "x",
+          rect.left + rect.width / 2
+        );
+
+        tspan.setAttribute(
+          "y",
+          rect.top + lineHeight * (index + 0.82)
+        );
+
+        tspan.setAttribute(
+          "text-anchor",
+          "middle"
+        );
+
+        svgText.appendChild(tspan);
+      });
+
+      svg.appendChild(svgText);
+    }
+
+
+    window.addEventListener("load", function () {
+
+      createTextHitArea(
+        document.querySelector(".error-code"),
+        "https://www.pococha.com/ja-jp"
+      );
+
+      createTextHitArea(
+        document.querySelector(".error-title"),
+        "https://haishin-lab.com/pococha-rankmeter/"
+      );
+
+      createTextHitArea(
+        document.querySelector(".error-message"),
+        "https://one-carat.com/campus/archives/87905#S1〜S6ランク"
+      );
+    });
+
+
+    window.addEventListener("resize", function () {
+      location.reload();
+    });
+  </script>
+
+</body>
+</html>
